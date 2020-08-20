@@ -98,7 +98,7 @@ GET /index.php HTTP/1.1
 
 然后是URL构成示例：
 
-![](../media/pics/URL构成示例.jpg)
+<img src="../media/pics/URL构成示例.jpg" width="300px">
 
 最后是请求方法，HTTP 1.1中定义了八种请求方法，具体作用如下：
 
@@ -109,15 +109,66 @@ GET /index.php HTTP/1.1
 |PUT|客户端向服务器发送数据取代指定文档内容|
 |DELETE|请求服务器删除指定页面|
 |HEAD|与GET类似，只是返回的响应无具体内容，一般用于获取报头|
-|OPTIONS||
-|||
+|OPTIONS|允许客户端查看服务器的性能|
+|TRACE|回显服务器收到的请求，一般用于测试或诊断|
+|CONNECT|HTTP/1.1协议中预留，可将服务器作为跳板，代替客户端访问其他网页|
+
+GET和POST方式用得较多，简单说下区别：
+
+> GET：请求参数都包含在URL中，数据可在URL中看到，无请求体，故只能携带少量数据(最多1024字节);<br>
+> POST：数据通过表单形式传输，包含在请求体中，故可携带大量信息。
 
 ### 2、请求头
 
+用于说明服务器要使用的附加信息，常用的头信息如下：
+
+|Header|解释|示例|
+|:-|:-|:-|
+|User-Agent|简称UA，供服务器识别客户使用的操作系统及版本、浏览器及版本等信息，写爬虫时常加上此信息以伪装成浏览器。|User-Agent: Mozilla/5.0 (Linux; X11)|
+|Referer|标识请求是从哪个页面过来的，即来路，服务器常用此信息来做来源统计和防盗链处理|Referer:http://blog.csdn.net/coder_pig|
+|Cookie/Cookies|网站为辨别用户仅限会话跟踪而存储在用户本地的数据，主要功能是维持当前访问会话。|Cookie: $Version=1; Skin=new;|
+|Host|	指定请求的服务器的域名和端口号|	Host: www.zcmhi.com|
+|Content-Type|	请求的与实体对应的MIME信息|	Content-Type:application/x-www-form-urlencoded|
+|Accept|请求报头域，指定客户端可接受的内容类型|Accept: text/plain, text/html|
+|Accept-Charset	|指定客户端可接受的字符编码集|	Accept-Charset: iso-8859-5|
+|Accept-Encoding	|指定客户端可支持的web服务器返回内容压缩编码类型	|Accept-Encoding: compress, gzip|
+|Accept-Language|	指定客户端可接受的语言|	Accept-Language: en,zh|
+|Accept-Ranges|	可以请求网页实体的一个或者多个子范围字段|	Accept-Ranges: bytes|
+|Authorization|	HTTP授权的授权证书|	Authorization:BasicQWx2FtZQ==|
+|Cache-Control|	指定请求和响应遵循的缓存机制	|Cache-Control: no-cache|
+|Connection|	表示是否需要持久连接，HTTP 1.1默认进行持久连接|	Connection: close|
+|Content-Length|	请求的内容长度|	Content-Length: 348|
+|Date|	请求发送的日期和时间|	Date: Tue, 15 Nov 2010 08:12:31 GMT|
+|Expect|	请求的特定的服务器行为|	Expect: 100-continue|
+|From|	发出请求的用户的Email	|From: user@email.com|
+|If-Match	|只有请求内容与实体相匹配才有效|	If-Match: "737060cd8c284d8af7ad3082f209582d"|
+|If-Modified-Since	|如果请求的部分在指定时间之后被修改则请求成功，未被修改则返回304代码|	If-Modified-Since: Sat, 29 Oct 2010 19:43:31 GMT|
+|If-None-Match	|如果内容未改变返回304代码，参数为服务器先前发送的Etag，与服务器回应的Etag比较判断是否改变|	If-None-Match: "737060cd8c284d8af7ad3082f209582d"|
+|If-Range	|如果实体未改变，服务器发送客户端丢失的部分，否则发送整个实体。参数也为Etag	|If-Range: "737060cd8c284d8af7ad3082f209582d"|
+|If-Unmodified-Since	|只在实体在指定时间之后未被修改才请求成功|	If-Unmodified-Since: Sat, 29 Oct 2010 19:43:31 GMT|
+|Max-Forwards	|限制信息通过代理和网关传送的时间	|Max-Forwards: 10|
+|Pragma	|用来包含实现特定的指令|	Pragma: no-cache|
+|Proxy-Authorization	|连接到代理的授权证书|	Proxy-Authorization: Basic QWxhc2FtZQ==|
+|Range|	只请求实体的一部分，指定范围|	Range: bytes=500-999|
+|TE|	客户端愿意接受的传输编码，并通知服务器接受接受尾加头信息	|TE: trailers,deflate;q=0.5|
+|Upgrade	|向服务器指定某种传输协议以便服务器进行转换（如果支持）	|Upgrade:HTTP/2.0,SHTTP/1.3,IRC/6.9, RTA/x11|
+|Via	|通知中间网关或代理服务器地址，通信协议	|Via: 1.0 fred, 1.1 nowhere.com (Apache/1.1)|
+|Warning|	关于消息实体的警告信息	|Warn: 199 Miscellaneous warning|
+
 ### 3、空行
+
+必不可少！请起头的最后会有一个空行，标识请求头头部结束，接下来为请求数据。
 
 ### 4、请求正文
 
+一般承载POST请求中的表单数据，请求头 `Content-Type` 需使用正确类型才能正常提交，对应关系如下表：
+
+|Content-Type|提交数据类型|
+|:-|:-|
+|application/x-www-form-urlencoded|表单数据|
+|multipart/form-data|文件|
+|application/json|JSON|
+|text/xml|XML|
 
 ## HTTP响应报文
 
